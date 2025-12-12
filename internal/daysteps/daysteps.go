@@ -18,13 +18,6 @@ type DaySteps struct {
 }
 
 func (ds *DaySteps) Parse(datastring string) (err error) {
-	if ds.Steps <= 0 {
-		return errors.New("шагов должно быть больше нуля")
-	}
-	if ds.Duration <= 0 {
-		return errors.New("продолжительность должна быть положительной")
-
-	}
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 2 {
 		return errors.New("некорректный формат данных: ожидается 2 части")
@@ -35,6 +28,9 @@ func (ds *DaySteps) Parse(datastring string) (err error) {
 		return err
 	}
 	ds.Steps = steps
+	if steps <= 0 {
+		return errors.New("шагов должно быть больше нуля")
+	}
 
 	durationStr := strings.TrimSpace(parts[1])
 	duration, err := time.ParseDuration(durationStr)
@@ -42,6 +38,10 @@ func (ds *DaySteps) Parse(datastring string) (err error) {
 		return err
 	}
 	ds.Duration = duration
+	if duration <= 0 {
+		return errors.New("продолжительность должна быть положительной")
+
+	}
 
 	return nil
 }
