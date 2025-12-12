@@ -20,12 +20,6 @@ type Training struct {
 }
 
 func (t *Training) Parse(datastring string) (err error) {
-	if t.Steps <= 0 {
-		return errors.New("шагов должно быть больше нуля")
-	}
-	if t.Duration <= 0 {
-		return errors.New("продолжительность должна быть положительной")
-	}
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 3 {
 		return errors.New("некорректный формат данных: ожидается 3 части")
@@ -35,6 +29,9 @@ func (t *Training) Parse(datastring string) (err error) {
 		return err
 	}
 	t.Steps = steps
+	if steps <= 0 {
+		return errors.New("шагов должно быть больше нуля")
+	}
 
 	t.TrainingType = strings.TrimSpace(parts[1])
 
@@ -44,6 +41,9 @@ func (t *Training) Parse(datastring string) (err error) {
 		return err
 	}
 	t.Duration = duration
+	if duration <= 0 {
+		return errors.New("продолжительность должна быть положительной")
+	}
 
 	return nil
 }
@@ -59,13 +59,13 @@ func (t Training) ActionInfo() (string, error) {
 	speedKmh = spentenergy.MeanSpeed(t.Steps, t.Height, t.Duration)
 
 	switch tType {
-	case "бег", "run":
+	case "Бег", "run":
 		calories, err = spentenergy.RunningSpentCalories(t.Steps, t.Height, t.Weight, t.Duration)
 		if err != nil {
 			calories = 0
 		}
 
-	case "ходьба", "walk":
+	case "Ходьба", "walk":
 		calories, err = spentenergy.WalkingSpentCalories(t.Steps, t.Height, t.Weight, t.Duration)
 		if err != nil {
 			calories = 0
