@@ -18,13 +18,19 @@ type DaySteps struct {
 }
 
 func (ds *DaySteps) Parse(datastring string) (err error) {
+	if ds.Steps <= 0 {
+		return errors.New("шагов должно быть больше нуля")
+	}
+	if ds.Duration <= 0 {
+		return errors.New("продолжительность должна быть положительной")
+
+	}
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 2 {
 		return errors.New("некорректный формат данных: ожидается 2 части")
 	}
 
-	stepsStr := strings.TrimSpace(parts[0])
-	steps, err := strconv.Atoi(stepsStr)
+	steps, err := strconv.Atoi(parts[0])
 	if err != nil {
 		return err
 	}
@@ -49,7 +55,7 @@ func (ds DaySteps) ActionInfo() (string, error) {
 	}
 
 	info := fmt.Sprintf(
-		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.",
+		"Количество шагов: %d.\nДистанция составила %.2f км.\nВы сожгли %.2f ккал.\n",
 		ds.Steps,
 		distance,
 		calories,
