@@ -20,11 +20,17 @@ type Training struct {
 }
 
 func (t *Training) Parse(datastring string) (err error) {
+	if t.Steps <= 0 {
+		return errors.New("шагов должно быть больше нуля")
+	}
+	if t.Duration <= 0 {
+		return errors.New("продолжительность должна быть положительной")
+	}
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 3 {
 		return errors.New("некорректный формат данных: ожидается 3 части")
 	}
-	steps, err := strconv.Atoi(strings.TrimSpace(parts[0]))
+	steps, err := strconv.Atoi(parts[0])
 	if err != nil {
 		return err
 	}
@@ -68,7 +74,7 @@ func (t Training) ActionInfo() (string, error) {
 		return "", errors.New("неизвестный тип тренировки")
 	}
 	result := fmt.Sprintf(
-		"Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f",
+		"Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n",
 		tType,
 		t.Duration.Hours(),
 		distanceKm,
